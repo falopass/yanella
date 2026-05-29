@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yanella - La Reina del Server</title>
+    <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Minecraftia';
+            src: url('https://cdn.jsdelivr.net/gh/IdreesInc/Minecraft-Font@master/minecraftia-regular-webfont.woff2') format('woff2'),
+                 url('https://cdn.jsdelivr.net/gh/IdreesInc/Minecraft-Font@master/minecraftia-regular-webfont.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        body {
+            font-family: 'Minecraftia', 'VT323', monospace;
+            background-color: #87CEEB;
+            min-height: 100vh;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Dirt pattern at bottom */
+        .ground {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 120px;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    #926c4d 0px,
+                    #926c4d 32px,
+                    #7a5a3a 32px,
+                    #7a5a3a 64px
+                );
+            z-index: 1;
+            border-top: 8px solid #5E9D34;
+        }
+
+        .ground::before {
+            content: '';
+            position: absolute;
+            top: -16px;
+            left: 0;
+            right: 0;
+            height: 16px;
+            background: repeating-linear-gradient(
+                90deg,
+                #5E9D34 0px,
+                #5E9D34 32px,
+                #4d8a2a 32px,
+                #4d8a2a 64px
+            );
+        }
+
+        /* Clouds - Minecraft style */
+        .cloud {
+            position: absolute;
+            background: #fff;
+            opacity: 0.9;
+            z-index: 2;
+        }
+
+        .cloud::before,
+        .cloud::after {
+            content: '';
+            position: absolute;
+            background: #fff;
+        }
+
+        .cloud1 {
+            width: 80px;
+            height: 32px;
+            top: 10%;
+            left: -100px;
+            animation: float 25s infinite linear;
+            box-shadow: 
+                32px -16px 0 #fff,
+                64px 0 0 #fff,
+                96px -16px 0 #fff,
+                128px 0 0 #fff;
+        }
+
+        .cloud2 {
+            width: 64px;
+            height: 24px;
+            top: 20%;
+            left: -80px;
+            animation: float 30s infinite linear;
+            animation-delay: 5s;
+            box-shadow: 
+                24px -12px 0 #fff,
+                48px 0 0 #fff,
+                72px -12px 0 #fff;
+        }
+
+        .cloud3 {
+            width: 96px;
+            height: 32px;
+            top: 8%;
+            left: -120px;
+            animation: float 22s infinite linear;
+            animation-delay: 10s;
+            box-shadow: 
+                32px -16px 0 #fff,
+                64px 0 0 #fff,
+                96px -16px 0 #fff,
+                128px 0 0 #fff,
+                160px -8px 0 #fff;
+        }
+
+        @keyframes float {
+            from { transform: translateX(0); }
+            to { transform: translateX(calc(100vw + 300px)); }
+        }
+
+        /* Container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Hero */
+        .hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 10vw, 5rem);
+            color: #FFD700;
+            text-shadow: 
+                4px 4px 0 #3d3d3d,
+                -2px -2px 0 #3d3d3d,
+                2px -2px 0 #3d3d3d,
+                -2px 2px 0 #3d3d3d;
+            margin-bottom: 16px;
+            animation: titlePulse 2s ease-in-out infinite;
+            letter-spacing: 4px;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 4vw, 1.5rem);
+            color: #fff;
+            text-shadow: 3px 3px 0 #3d3d3d;
+            margin-bottom: 40px;
+        }
+
+        /* Minecraft Item Frame */
+        .item-frame {
+            position: relative;
+            display: inline-block;
+            background: #8B6914;
+            padding: 12px;
+            border: 6px solid #5D4037;
+            box-shadow: 
+                inset 4px 4px 0 #D4A574,
+                inset -4px -4px 0 #3E2723,
+                0 8px 0 #3E2723;
+        }
+
+        .item-frame img {
+            width: 260px;
+            height: 260px;
+            object-fit: cover;
+            border: 4px solid #5D4037;
+            display: block;
+        }
+
+        .item-frame-nail {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: #808080;
+            border: 3px solid #404040;
+            border-radius: 50%;
+            z-index: 10;
+        }
+
+        /* Hearts - Minecraft style floating */
+        .heart {
+            position: absolute;
+            width: 36px;
+            height: 36px;
+            background-image: url('minecraft.jpg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 5;
+            animation: heartFloat 3s ease-in-out infinite;
+        }
+
+        .heart1 { top: 15%; left: 8%; animation-delay: 0s; }
+        .heart2 { top: 25%; right: 12%; animation-delay: 0.5s; }
+        .heart3 { top: 55%; left: 5%; animation-delay: 1s; }
+        .heart4 { top: 65%; right: 8%; animation-delay: 1.5s; }
+        .heart5 { top: 35%; left: 45%; animation-delay: 2s; }
+
+        @keyframes heartFloat {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-15px) scale(1.1); }
+        }
+
+        /* Stats - Minecraft blocks */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin: 60px 0;
+        }
+
+        .mc-block {
+            background: #926c4d;
+            border: 4px solid #7a5a3a;
+            padding: 24px 16px;
+            text-align: center;
+            position: relative;
+            box-shadow: 
+                inset 4px 4px 0 #a67b5b,
+                inset -4px -4px 0 #5c4033;
+        }
+
+        .mc-block::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: #5E9D34;
+            border-bottom: 2px solid #4d8a2a;
+        }
+
+        .mc-block-icon {
+            font-size: 2.5rem;
+            margin: 12px 0 16px;
+            display: block;
+        }
+
+        .mc-block-title {
+            font-size: 0.9rem;
+            color: #FFD700;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 0 #3d3d3d;
+        }
+
+        .mc-block-value {
+            font-size: 1rem;
+            color: #fff;
+            text-shadow: 2px 2px 0 #3d3d3d;
+        }
+
+        /* Gallery - Inventory slots */
+        .gallery {
+            margin: 60px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(1.5rem, 5vw, 2.5rem);
+            color: #FFD700;
+            text-shadow: 3px 3px 0 #3d3d3d;
+            margin-bottom: 40px;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            background: #c6c6c6;
+            padding: 24px;
+            border: 4px solid #373737;
+            box-shadow: 
+                inset 4px 4px 0 #fff,
+                inset -4px -4px 0 #555;
+        }
+
+        .inventory-slot {
+            position: relative;
+            background: #8b8b8b;
+            border: 3px solid #373737;
+            padding: 8px;
+            box-shadow: 
+                inset 3px 3px 0 #fff,
+                inset -3px -3px 0 #555;
+            transition: transform 0.2s;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .inventory-slot:hover {
+            transform: scale(1.05);
+            background: #9a9a9a;
+        }
+
+        .inventory-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            image-rendering: pixelated;
+        }
+
+        /* Companions - Mob cards */
+        .companions {
+            margin: 60px 0;
+        }
+
+        .companions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .mob-card {
+            background: #567D46;
+            border: 4px solid #3D5C2D;
+            padding: 24px;
+            text-align: center;
+            box-shadow: 
+                inset 4px 4px 0 #7ABD6E,
+                inset -4px -4px 0 #3D5C2D;
+            position: relative;
+        }
+
+        .mob-card img {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+            image-rendering: pixelated;
+            margin-bottom: 16px;
+            filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.3));
+        }
+
+        .mob-text {
+            font-size: 0.85rem;
+            color: #fff;
+            text-shadow: 2px 2px 0 #3d3d3d;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 60px 20px 140px;
+            position: relative;
+        }
+
+        .footer-text {
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
+            color: #fff;
+            text-shadow: 2px 2px 0 #3d3d3d;
+            margin-bottom: 32px;
+            line-height: 2;
+        }
+
+        /* Minecraft Button */
+        .mc-button {
+            display: inline-block;
+            background: #3c8527;
+            border: 4px solid #1e1e1f;
+            padding: 16px 32px;
+            font-family: 'Minecraftia', 'VT323', monospace;
+            font-size: 1rem;
+            color: #fff;
+            text-shadow: 2px 2px 0 #1d4d13;
+            cursor: pointer;
+            box-shadow: 
+                inset 4px 4px 0 #4f913c,
+                inset -4px -4px 0 #1d4d13,
+                0 6px 0 #1e1e1f;
+            transition: all 0.1s;
+            text-decoration: none;
+            position: relative;
+        }
+
+        .mc-button:hover {
+            background: #2a641c;
+        }
+
+        .mc-button:active {
+            transform: translateY(6px);
+            box-shadow: 
+                inset 4px 4px 0 #4f913c,
+                inset -4px -4px 0 #1d4d13,
+                0 0 0 #1e1e1f;
+        }
+
+        /* Particles */
+        .particle {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: #FFD700;
+            pointer-events: none;
+            z-index: 100;
+            animation: particleFall 3s linear forwards;
+        }
+
+        @keyframes particleFall {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                padding: 40px 10px 30px;
+            }
+
+            .item-frame img {
+                width: 200px;
+                height: 200px;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                margin: 40px 0;
+            }
+
+            .inventory-grid {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 16px;
+                gap: 12px;
+            }
+
+            .companions-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .container {
+                padding: 10px;
+            }
+
+            .footer {
+                padding: 40px 10px 140px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .item-frame img {
+                width: 160px;
+                height: 160px;
+            }
+
+            .inventory-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+                padding: 12px;
+            }
+
+            .mc-button {
+                padding: 12px 24px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Music Toggle Button */
+        .music-btn {
+            position: fixed;
+            bottom: 140px;
+            right: 20px;
+            width: 56px;
+            height: 56px;
+            background: #3c8527;
+            border: 4px solid #1e1e1f;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 
+                inset 4px 4px 0 #4f913c,
+                inset -4px -4px 0 #1d4d13,
+                0 6px 0 #1e1e1f;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.1s;
+        }
+
+        .music-btn:hover {
+            background: #2a641c;
+        }
+
+        .music-btn:active {
+            transform: translateY(6px);
+            box-shadow: 
+                inset 4px 4px 0 #4f913c,
+                inset -4px -4px 0 #1d4d13,
+                0 0 0 #1e1e1f;
+        }
+
+        .music-btn.muted {
+            background: #8B6914;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .music-btn {
+                bottom: 120px;
+                right: 10px;
+                width: 48px;
+                height: 48px;
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Clouds -->
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+
+    <!-- Floating Hearts -->
+    <div class="heart heart1"></div>
+    <div class="heart heart2"></div>
+    <div class="heart heart3"></div>
+    <div class="heart heart4"></div>
+    <div class="heart heart5"></div>
+
+    <div class="container">
+        <!-- Hero -->
+        <section class="hero">
+            <h1>YANELLA</h1>
+            <p class="hero-subtitle">La Reina Oficial del Server</p>
+            
+            <div class="item-frame">
+                <div class="item-frame-nail"></div>
+                <img src="ella.jpg" alt="Yanella">
+            </div>
+        </section>
+
+        <!-- Stats -->
+        <section class="stats">
+            <div class="mc-block">
+                <span class="mc-block-icon">❤️</span>
+                <div class="mc-block-title">CORAZONES ROBADOS</div>
+                <div class="mc-block-value">999+ y contando</div>
+            </div>
+            <div class="mc-block">
+                <span class="mc-block-icon">🛡️</span>
+                <div class="mc-block-title">PROTECCIÓN GOLEM</div>
+                <div class="mc-block-value">Activa 24/7</div>
+            </div>
+            <div class="mc-block">
+                <span class="mc-block-icon">⭐</span>
+                <div class="mc-block-title">RANGO EN EL SERVER</div>
+                <div class="mc-block-value">Reina absoluta</div>
+            </div>
+        </section>
+
+        <!-- Gallery -->
+        <section class="gallery">
+            <h2 class="section-title">Inventario de la Reina</h2>
+            <div class="inventory-grid">
+                <div class="inventory-slot">
+                    <img src="ella.jpg" alt="Yanella 1">
+                </div>
+                <div class="inventory-slot">
+                    <img src="ella2.jpg" alt="Yanella 2">
+                </div>
+                <div class="inventory-slot">
+                    <img src="ella3.jpg" alt="Yanella 3">
+                </div>
+                <div class="inventory-slot">
+                    <img src="ella4.jpg" alt="Yanella 4">
+                </div>
+            </div>
+        </section>
+
+        <!-- Companions -->
+        <section class="companions">
+            <h2 class="section-title">Testigos del Server</h2>
+            <div class="companions-grid">
+                <div class="mob-card">
+                    <img src="minecraft2.jpg" alt="Abeja Minecraft">
+                    <p class="mob-text">La abeja oficial ya la vio y se enamoró. No se discute.</p>
+                </div>
+                <div class="mob-card">
+                    <img src="minecraft3.jpg" alt="Gallina Minecraft">
+                    <p class="mob-text">La gallina del server confirma: es real. 100% verificado.</p>
+                </div>
+                <div class="mob-card">
+                    <img src="minecraft4.jpg" alt="Golem Minecraft">
+                    <p class="mob-text">El golem está asignado a proteger la reina. No se metan.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p class="footer-text">
+                Fin del comunicado.<br>
+                Yanella sigue siendo la jefa del mundo.
+            </p>
+            <button class="mc-button" onclick="spawnParticles()">Aceptar verdad absoluta</button>
+        </footer>
+    </div>
+
+    <div class="ground"></div>
+
+    <!-- Background Music -->
+    <audio id="bgMusic" loop>
+        <source src="cancion-minecraft.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Music Toggle Button -->
+    <button id="musicToggle" class="music-btn" onclick="toggleMusic()" title="Activar/Desactivar música">
+        🎵
+    </button>
+
+    <script>
+        const bgMusic = document.getElementById('bgMusic');
+        const musicToggle = document.getElementById('musicToggle');
+        let isPlaying = false;
+
+        // Intentar reproducir al cargar
+        window.addEventListener('load', () => {
+            bgMusic.volume = 0.5;
+            const playPromise = bgMusic.play();
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isPlaying = true;
+                }).catch(() => {
+                    // Autoplay bloqueado, esperar interacción
+                    isPlaying = false;
+                    musicToggle.classList.add('muted');
+                });
+            }
+        });
+
+        // También intentar en primera interacción del usuario
+        document.addEventListener('click', function initAudio() {
+            if (!isPlaying) {
+                bgMusic.play().then(() => {
+                    isPlaying = true;
+                    musicToggle.classList.remove('muted');
+                }).catch(() => {});
+            }
+            document.removeEventListener('click', initAudio);
+        }, { once: true });
+
+        function toggleMusic() {
+            if (isPlaying) {
+                bgMusic.pause();
+                musicToggle.classList.add('muted');
+                musicToggle.textContent = '🔇';
+            } else {
+                bgMusic.play();
+                musicToggle.classList.remove('muted');
+                musicToggle.textContent = '🎵';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function spawnParticles() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const particle = document.createElement('div');
+                    particle.className = 'particle';
+                    particle.style.left = Math.random() * window.innerWidth + 'px';
+                    particle.style.top = '-10px';
+                    const colors = ['#FFD700', '#FF6B6B', '#4ECDC4', '#95E1D3', '#5E9D34'];
+                    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    document.body.appendChild(particle);
+                    
+                    setTimeout(() => particle.remove(), 3000);
+                }, i * 100);
+            }
+        }
+    </script>
+</body>
+</html>
