@@ -3,7 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yanella - La Reina del Server</title>
+    <title>Yanella - La más linda del server</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Bienvenido al server de Yanella">
+    <meta property="og:description" content="La más linda del server. Entra bajo tu propio riesgo... de enamorarte">
+    <meta property="og:image" content="https://yanellalamaslinda.cl/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yanellalamaslinda.cl/">
+    <meta property="og:locale" content="es_ES">
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Bienvenido al server de Yanella">
+    <meta name="twitter:description" content="La más linda del server. Entra bajo tu propio riesgo... de enamorarte">
+    <meta name="twitter:image" content="https://yanellalamaslinda.cl/og-image.png">
+    
     <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
     <style>
         @font-face {
@@ -24,39 +48,60 @@
 
         body {
             font-family: 'Minecraftia', 'VT323', monospace;
-            background-color: #87CEEB;
-            min-height: 100vh;
+            background: #87CEEB;
             color: #fff;
             overflow-x: hidden;
             position: relative;
         }
 
-        /* Dirt pattern at bottom */
+        /* Minecraft Sky with pixelated clouds */
+        .sky-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent 0px,
+                    transparent 40px,
+                    rgba(255,255,255,0.03) 40px,
+                    rgba(255,255,255,0.03) 80px
+                );
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Ground layers */
         .ground {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 120px;
+            height: 160px;
             background: 
                 repeating-linear-gradient(
                     0deg,
                     #926c4d 0px,
-                    #926c4d 32px,
-                    #7a5a3a 32px,
-                    #7a5a3a 64px
+                    #926c4d 24px,
+                    #7a5a3a 24px,
+                    #7a5a3a 48px
                 );
             z-index: 1;
-            border-top: 8px solid #5E9D34;
+            border-top: 12px solid #5E9D34;
+            box-shadow: 
+                0 -4px 0 #4d8a2a,
+                0 -8px 0 #3d7a1a;
         }
 
         .ground::before {
             content: '';
             position: absolute;
-            top: -16px;
+            top: -24px;
             left: 0;
             right: 0;
-            height: 16px;
+            height: 24px;
             background: repeating-linear-gradient(
                 90deg,
                 #5E9D34 0px,
@@ -64,21 +109,190 @@
                 #4d8a2a 32px,
                 #4d8a2a 64px
             );
+            border-bottom: 4px solid #3d7a1a;
         }
 
-        /* Clouds - Minecraft style */
-        .cloud {
+        .ground::after {
+            content: '';
             position: absolute;
-            background: #fff;
-            opacity: 0.9;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 32px;
+            background: repeating-linear-gradient(
+                0deg,
+                #7a5a3a 0px,
+                #7a5a3a 16px,
+                #6a4a2a 16px,
+                #6a4a2a 32px
+            );
+            opacity: 0.5;
+        }
+
+        /* Ore veins in ground */
+        .ground-ore {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #808080;
+            border: 1px solid #606060;
             z-index: 2;
         }
 
-        .cloud::before,
-        .cloud::after {
+        .ore1 { top: 20%; left: 15%; background: #808080; border-color: #606060; }
+        .ore2 { top: 50%; left: 45%; background: #4682B4; border-color: #2a5270; }
+        .ore3 { top: 35%; left: 75%; background: #808080; border-color: #606060; }
+        .ore4 { top: 70%; left: 25%; background: #B8860B; border-color: #8B6914; }
+        .ore5 { top: 45%; left: 85%; background: #808080; border-color: #606060; }
+
+        /* Bedrock layer */
+        .bedrock {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    #333 0px,
+                    #333 8px,
+                    #222 8px,
+                    #222 16px
+                );
+            opacity: 0.95;
+            border-top: 2px solid #111;
+        }
+
+        /* Minecraft Sun */
+        .mc-sun {
+            position: fixed;
+            top: 40px;
+            right: 60px;
+            width: 64px;
+            height: 64px;
+            background: #FFD700;
+            border: 4px solid #FFA500;
+            z-index: 2;
+            box-shadow: 
+                0 0 20px rgba(255, 215, 0, 0.6),
+                0 0 40px rgba(255, 215, 0, 0.3);
+            animation: sunPulse 4s ease-in-out infinite;
+        }
+
+        .mc-sun::before {
             content: '';
             position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            border: 2px solid rgba(255, 215, 0, 0.3);
+        }
+
+        @keyframes sunPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+        }
+
+        /* Mountains */
+        .mountain {
+            position: fixed;
+            bottom: 160px;
+            z-index: 1;
+            opacity: 0.8;
+        }
+
+        .mountain1 {
+            left: 10%;
+            width: 0;
+            height: 0;
+            border-left: 80px solid transparent;
+            border-right: 80px solid transparent;
+            border-bottom: 120px solid #6B8E6B;
+            filter: drop-shadow(2px 0 0 #5a7a5a);
+        }
+
+        .mountain1::after {
+            content: '';
+            position: absolute;
+            top: 60px;
+            left: -30px;
+            width: 0;
+            height: 0;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 50px solid #8FBC8F;
+        }
+
+        .mountain2 {
+            right: 15%;
+            width: 0;
+            height: 0;
+            border-left: 60px solid transparent;
+            border-right: 60px solid transparent;
+            border-bottom: 90px solid #7a9a7a;
+            filter: drop-shadow(2px 0 0 #6a8a6a);
+        }
+
+        /* Minecraft Trees */
+        .mc-tree {
+            position: fixed;
+            bottom: 160px;
+            z-index: 2;
+        }
+
+        .tree1 {
+            left: 5%;
+            width: 16px;
+            height: 64px;
+            background: #8B6914;
+            border: 2px solid #6B4F0A;
+        }
+
+        .tree1::before {
+            content: '';
+            position: absolute;
+            top: -48px;
+            left: -24px;
+            width: 64px;
+            height: 48px;
+            background: #228B22;
+            border: 2px solid #1a6b1a;
+            box-shadow: 
+                inset -4px -4px 0 rgba(0,0,0,0.2),
+                0 4px 0 #1a6b1a;
+        }
+
+        .tree2 {
+            right: 8%;
+            width: 16px;
+            height: 48px;
+            background: #8B6914;
+            border: 2px solid #6B4F0A;
+        }
+
+        .tree2::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            left: -20px;
+            width: 56px;
+            height: 40px;
+            background: #32CD32;
+            border: 2px solid #228B22;
+            box-shadow: 
+                inset -4px -4px 0 rgba(0,0,0,0.2),
+                0 4px 0 #228B22;
+        }
+
+        /* Clouds */
+        .cloud {
+            position: absolute;
             background: #fff;
+            opacity: 0.95;
+            z-index: 2;
+            border-radius: 0;
         }
 
         .cloud1 {
@@ -141,6 +355,13 @@
             text-align: center;
             padding: 60px 20px 40px;
             position: relative;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.4);
+            border: 4px solid #5a5a5a;
+            border-bottom: 8px solid #3a3a3a;
+            border-right: 8px solid #3a3a3a;
+            margin: 20px;
+            box-shadow: inset 4px 4px 0 rgba(255,255,255,0.1);
         }
 
         .hero h1 {
@@ -151,9 +372,41 @@
                 -2px -2px 0 #3d3d3d,
                 2px -2px 0 #3d3d3d,
                 -2px 2px 0 #3d3d3d;
-            margin-bottom: 16px;
+            margin-bottom: 8px;
             animation: titlePulse 2s ease-in-out infinite;
             letter-spacing: 4px;
+            position: relative;
+        }
+
+        /* Enchanted effect */
+        .hero h1 .enchanted {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: block;
+            text-align: center;
+            font-size: inherit;
+            letter-spacing: inherit;
+            background: linear-gradient(
+                90deg,
+                #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3,
+                #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3
+            );
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            animation: enchantedGlow 3s linear infinite;
+            opacity: 0.9;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes enchantedGlow {
+            0% { background-position: 0% center; }
+            100% { background-position: 200% center; }
         }
 
         @keyframes titlePulse {
@@ -165,10 +418,10 @@
             font-size: clamp(1rem, 4vw, 1.5rem);
             color: #fff;
             text-shadow: 3px 3px 0 #3d3d3d;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
-        /* Minecraft Item Frame */
+        /* Item Frame */
         .item-frame {
             position: relative;
             display: inline-block;
@@ -182,8 +435,8 @@
         }
 
         .item-frame img {
-            width: 260px;
-            height: 260px;
+            width: 280px;
+            height: 280px;
             object-fit: cover;
             border: 4px solid #5D4037;
             display: block;
@@ -202,81 +455,156 @@
             z-index: 10;
         }
 
-        /* Hearts - Minecraft style floating */
-        .heart {
+        /* Meme Stickers */
+        .meme-sticker {
             position: absolute;
-            width: 36px;
-            height: 36px;
-            background-image: url('minecraft.jpg');
-            background-size: contain;
-            background-repeat: no-repeat;
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            image-rendering: pixelated;
+            z-index: 15;
+            opacity: 0.95;
+            animation: memeFloat 4s ease-in-out infinite;
+            filter: drop-shadow(3px 3px 0 rgba(0,0,0,0.4));
+        }
+
+        .meme1 { top: 10%; left: 3%; animation-delay: 0s; }
+        .meme2 { top: 18%; right: 5%; animation-delay: 1s; }
+        .meme3 { top: 50%; left: 2%; animation-delay: 2s; }
+        .meme4 { top: 65%; right: 3%; animation-delay: 3s; }
+
+        @keyframes memeFloat {
+            0%, 100% { transform: translateY(0) rotate(-5deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        /* Particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
             z-index: 5;
-            animation: heartFloat 3s ease-in-out infinite;
+            overflow: hidden;
         }
 
-        .heart1 { top: 15%; left: 8%; animation-delay: 0s; }
-        .heart2 { top: 25%; right: 12%; animation-delay: 0.5s; }
-        .heart3 { top: 55%; left: 5%; animation-delay: 1s; }
-        .heart4 { top: 65%; right: 8%; animation-delay: 1.5s; }
-        .heart5 { top: 35%; left: 45%; animation-delay: 2s; }
-
-        @keyframes heartFloat {
-            0%, 100% { transform: translateY(0) scale(1); }
-            50% { transform: translateY(-15px) scale(1.1); }
+        .particle {
+            position: absolute;
+            bottom: -20px;
+            animation: floatUp 8s linear infinite;
+            opacity: 0.8;
         }
 
-        /* Stats - Minecraft blocks */
-        .stats {
+        .particle.heart {
+            width: 16px;
+            height: 16px;
+            background: #ff4444;
+            position: relative;
+            transform: rotate(-45deg);
+        }
+
+        .particle.heart::before,
+        .particle.heart::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: #ff4444;
+            border-radius: 50%;
+        }
+
+        .particle.heart::before {
+            top: -8px;
+            left: 0;
+        }
+
+        .particle.heart::after {
+            left: 8px;
+            top: 0;
+        }
+
+        .particle.xp {
+            width: 12px;
+            height: 12px;
+            background: #7FFF00;
+            border: 2px solid #55aa00;
+            box-shadow: 0 0 6px #7FFF00;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Words Section */
+        .words-section {
+            margin: 50px 0;
+            text-align: center;
+        }
+
+        .words-title {
+            font-size: clamp(1.2rem, 4vw, 1.8rem);
+            color: #FFD700;
+            text-shadow: 3px 3px 0 #3d3d3d;
+            margin-bottom: 24px;
+        }
+
+        .words-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 24px;
-            margin: 60px 0;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 16px;
+            max-width: 600px;
+            margin: 0 auto;
         }
 
-        .mc-block {
+        .word-block {
             background: #926c4d;
             border: 4px solid #7a5a3a;
-            padding: 24px 16px;
+            border-bottom: 6px solid #5c4033;
+            border-right: 6px solid #5c4033;
+            padding: 16px 12px;
             text-align: center;
-            position: relative;
             box-shadow: 
                 inset 4px 4px 0 #a67b5b,
                 inset -4px -4px 0 #5c4033;
+            position: relative;
         }
 
-        .mc-block::after {
+        .word-block::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 8px;
+            height: 6px;
             background: #5E9D34;
             border-bottom: 2px solid #4d8a2a;
         }
 
-        .mc-block-icon {
-            font-size: 2.5rem;
-            margin: 12px 0 16px;
-            display: block;
-        }
-
-        .mc-block-title {
-            font-size: 0.9rem;
+        .word-text {
+            font-size: 1.1rem;
             color: #FFD700;
-            margin-bottom: 8px;
             text-shadow: 2px 2px 0 #3d3d3d;
+            margin-top: 8px;
         }
 
-        .mc-block-value {
-            font-size: 1rem;
-            color: #fff;
-            text-shadow: 2px 2px 0 #3d3d3d;
-        }
-
-        /* Gallery - Inventory slots */
+        /* Gallery */
         .gallery {
-            margin: 60px 0;
+            margin: 50px 0;
         }
 
         .section-title {
@@ -284,39 +612,41 @@
             font-size: clamp(1.5rem, 5vw, 2.5rem);
             color: #FFD700;
             text-shadow: 3px 3px 0 #3d3d3d;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .inventory-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            background: #c6c6c6;
-            padding: 24px;
-            border: 4px solid #373737;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .photo-item {
+            background: #8B6914;
+            border: 6px solid #5D4037;
+            border-bottom: 8px solid #3E2723;
+            border-right: 8px solid #3E2723;
+            padding: 10px;
             box-shadow: 
-                inset 4px 4px 0 #fff,
-                inset -4px -4px 0 #555;
+                inset 4px 4px 0 #D4A574,
+                inset -4px -4px 0 #3E2723,
+                0 8px 0 #2a1a15;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .inventory-slot {
-            position: relative;
-            background: #8b8b8b;
-            border: 3px solid #373737;
-            padding: 8px;
-            box-shadow: 
-                inset 3px 3px 0 #fff,
-                inset -3px -3px 0 #555;
-            transition: transform 0.2s;
-            aspect-ratio: 1;
+            width: 100%;
+            height: 220px;
+            background: #5D4037;
+            border: 4px solid #3E2723;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .inventory-slot:hover {
-            transform: scale(1.05);
-            background: #9a9a9a;
         }
 
         .inventory-slot img {
@@ -326,60 +656,78 @@
             image-rendering: pixelated;
         }
 
-        /* Companions - Mob cards */
-        .companions {
-            margin: 60px 0;
-        }
-
-        .companions-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 24px;
-        }
-
-        .mob-card {
-            background: #567D46;
-            border: 4px solid #3D5C2D;
-            padding: 24px;
+        .photo-caption {
+            font-size: 1rem;
+            color: #FFD700;
+            text-shadow: 2px 2px 0 #000;
             text-align: center;
-            box-shadow: 
-                inset 4px 4px 0 #7ABD6E,
-                inset -4px -4px 0 #3D5C2D;
+            font-weight: bold;
+            padding: 10px 0 4px;
+            letter-spacing: 1px;
+        }
+
+        /* Quote Sign */
+        .quote-section {
+            margin: 50px 0;
+            text-align: center;
+        }
+
+        .quote-sign {
             position: relative;
+            display: inline-block;
+            background: #8B6914;
+            border: 6px solid #5D4037;
+            border-bottom: 8px solid #3E2723;
+            border-right: 8px solid #3E2723;
+            padding: 20px 28px;
+            box-shadow: 
+                inset 4px 4px 0 #D4A574,
+                inset -4px -4px 0 #3E2723,
+                0 8px 0 #2a1a15;
+            max-width: 500px;
         }
 
-        .mob-card img {
-            width: 140px;
-            height: 140px;
-            object-fit: contain;
-            image-rendering: pixelated;
-            margin-bottom: 16px;
-            filter: drop-shadow(4px 4px 0 rgba(0,0,0,0.3));
+        .quote-nail {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            background: #808080;
+            border: 3px solid #404040;
+            border-radius: 50%;
         }
 
-        .mob-text {
-            font-size: 0.85rem;
+        .quote-text {
+            font-size: 0.9rem;
             color: #fff;
             text-shadow: 2px 2px 0 #3d3d3d;
             line-height: 1.6;
+            font-style: italic;
+        }
+
+        .quote-sub {
+            font-size: 0.75rem;
+            color: #FFD700;
+            text-shadow: 2px 2px 0 #3d3d3d;
+            margin-top: 10px;
         }
 
         /* Footer */
         .footer {
             text-align: center;
-            padding: 60px 20px 140px;
-            position: relative;
+            padding: 40px 20px 140px;
         }
 
         .footer-text {
             font-size: clamp(0.9rem, 3vw, 1.2rem);
             color: #fff;
             text-shadow: 2px 2px 0 #3d3d3d;
-            margin-bottom: 32px;
-            line-height: 2;
+            margin-bottom: 20px;
+            line-height: 1.8;
         }
 
-        /* Minecraft Button */
         .mc-button {
             display: inline-block;
             background: #3c8527;
@@ -396,7 +744,6 @@
                 0 6px 0 #1e1e1f;
             transition: all 0.1s;
             text-decoration: none;
-            position: relative;
         }
 
         .mc-button:hover {
@@ -411,20 +758,836 @@
                 0 0 0 #1e1e1f;
         }
 
-        /* Particles */
-        .particle {
+        /* Music Toggle */
+        .music-toggle {
             position: fixed;
-            width: 8px;
-            height: 8px;
-            background: #FFD700;
-            pointer-events: none;
+            bottom: 20px;
+            right: 20px;
             z-index: 100;
-            animation: particleFall 3s linear forwards;
+            background: #3c8527;
+            border: 4px solid #1e1e1f;
+            border-bottom: 6px solid #0f0f0f;
+            border-right: 6px solid #0f0f0f;
+            padding: 12px 20px;
+            font-family: 'Minecraftia', 'VT323', monospace;
+            font-size: 0.9rem;
+            color: #fff;
+            text-shadow: 2px 2px 0 #1d4d13;
+            cursor: pointer;
+            box-shadow: 
+                inset 4px 4px 0 #4f913c,
+                inset -4px -4px 0 #1d4d13,
+                0 6px 0 #0a0a0a;
+            transition: all 0.1s;
         }
 
-        @keyframes particleFall {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        .music-toggle:hover {
+            background: #2a641c;
+        }
+
+        .music-toggle:active {
+            transform: translateY(6px);
+            box-shadow: 
+                inset 4px 4px 0 #4f913c,
+                inset -4px -4px 0 #1d4d13,
+                0 0 0 #0a0a0a;
+        }
+
+        /* Hotbar */
+        .hotbar {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin: 40px auto;
+            padding: 8px;
+            background: #1a1a1a;
+            border: 4px solid #333;
+            border-bottom: 6px solid #111;
+            border-right: 6px solid #111;
+            max-width: fit-content;
+            box-shadow: 
+                inset 2px 2px 0 #444,
+                0 4px 0 #000;
+        }
+
+        .hotbar-slot {
+            width: 56px;
+            height: 56px;
+            background: #8B8B8B;
+            border: 3px solid #555;
+            border-bottom: 5px solid #333;
+            border-right: 5px solid #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #fff;
+            text-shadow: 1px 1px 0 #000;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.1s;
+            flex-shrink: 0;
+        }
+
+        .hotbar-slot:hover {
+            background: #9B9B9B;
+        }
+
+        .hotbar-slot.active {
+            border-color: #fff;
+            box-shadow: 
+                inset 0 0 0 2px #fff,
+                0 0 10px rgba(255,255,255,0.6);
+        }
+
+        .hotbar-slot .slot-num {
+            position: absolute;
+            top: 2px;
+            left: 4px;
+            font-size: 0.55rem;
+            color: #ccc;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        .hotbar-slot .slot-icon {
+            font-size: 1.4rem;
+            filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.5));
+        }
+
+        /* Day/Night Toggle */
+        .daynight-toggle {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 100;
+            background: #3c8527;
+            border: 4px solid #1e1e1f;
+            border-bottom: 6px solid #0f0f0f;
+            border-right: 6px solid #0f0f0f;
+            padding: 10px 16px;
+            font-family: 'Minecraftia', 'VT323', monospace;
+            font-size: 0.8rem;
+            color: #fff;
+            text-shadow: 2px 2px 0 #1d4d13;
+            cursor: pointer;
+            box-shadow: 
+                inset 4px 4px 0 #4f913c,
+                inset -4px -4px 0 #1d4d13,
+                0 6px 0 #0a0a0a;
+            transition: all 0.1s;
+        }
+
+        .daynight-toggle:hover {
+            background: #2a641c;
+        }
+
+        .daynight-toggle:active {
+            transform: translateY(6px);
+            box-shadow: 
+                inset 4px 4px 0 #4f913c,
+                inset -4px -4px 0 #1d4d13,
+                0 0 0 #0a0a0a;
+        }
+
+        /* Night mode */
+        body.night {
+            background: #1a1a2e;
+        }
+
+        body.night .sky-pattern {
+            background: 
+                repeating-linear-gradient(
+                    90deg,
+                    transparent 0px,
+                    transparent 40px,
+                    rgba(255,255,255,0.01) 40px,
+                    rgba(255,255,255,0.01) 80px
+                );
+        }
+
+        body.night .mc-sun {
+            background: #F0E68C;
+            border-color: #DAA520;
+            box-shadow: 
+                0 0 20px rgba(240, 230, 140, 0.4),
+                0 0 40px rgba(240, 230, 140, 0.2);
+        }
+
+        body.night .cloud {
+            opacity: 0.3;
+        }
+
+        /* Mobs */
+        .mob {
+            position: fixed;
+            bottom: 160px;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .mob-chicken {
+            width: 24px;
+            height: 24px;
+            background: #FFF8DC;
+            border: 2px solid #DDD;
+            animation: mobWalk 20s linear infinite;
+        }
+
+        .mob-chicken::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 2px;
+            width: 0;
+            height: 0;
+            border-left: 6px solid transparent;
+            border-right: 6px solid transparent;
+            border-bottom: 10px solid #FFF8DC;
+        }
+
+        .mob-chicken::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            right: -6px;
+            width: 8px;
+            height: 6px;
+            background: #FF6347;
+            border: 1px solid #CC4122;
+        }
+
+        .mob-cow {
+            width: 40px;
+            height: 28px;
+            background: #8B4513;
+            border: 2px solid #654321;
+            animation: mobWalk 35s linear infinite;
+            animation-delay: 5s;
+        }
+
+        .mob-cow::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 4px;
+            width: 28px;
+            height: 12px;
+            background: #8B4513;
+            border: 2px solid #654321;
+            border-bottom: none;
+        }
+
+        .mob-cow::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 8px;
+            width: 8px;
+            height: 8px;
+            background: #FFF;
+            border: 1px solid #DDD;
+        }
+
+        .mob-pig {
+            width: 32px;
+            height: 20px;
+            background: #FFB6C1;
+            border: 2px solid #FF69B4;
+            animation: mobWalk 28s linear infinite;
+            animation-delay: 12s;
+        }
+
+        .mob-pig::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: 6px;
+            width: 16px;
+            height: 10px;
+            background: #FFB6C1;
+            border: 2px solid #FF69B4;
+            border-bottom: none;
+        }
+
+        .mob-pig::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            right: -4px;
+            width: 6px;
+            height: 6px;
+            background: #FF1493;
+            border-radius: 50%;
+        }
+
+        @keyframes mobWalk {
+            from { left: -60px; }
+            to { left: calc(100vw + 60px); }
+        }
+
+        /* Heart particles on hover */
+        .heart-particle {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #ff4444;
+            transform: rotate(-45deg);
+            pointer-events: none;
+            animation: heartFloat 1.5s ease-out forwards;
+            z-index: 20;
+        }
+
+        .heart-particle::before,
+        .heart-particle::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #ff4444;
+            border-radius: 50%;
+        }
+
+        .heart-particle::before {
+            top: -6px;
+            left: 0;
+        }
+
+        .heart-particle::after {
+            left: 6px;
+            top: 0;
+        }
+
+        @keyframes heartFloat {
+            0% {
+                transform: rotate(-45deg) translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: rotate(-45deg) translateY(-80px) scale(0.5);
+                opacity: 0;
+            }
+        }
+
+        /* Creeper easter egg */
+        .creeper-trigger {
+            position: fixed;
+            bottom: 5px;
+            left: 5px;
+            width: 20px;
+            height: 20px;
+            z-index: 200;
+            cursor: pointer;
+            opacity: 0;
+        }
+
+        .creeper {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            width: 120px;
+            height: 120px;
+            background: #50B000;
+            border: 4px solid #3a8a00;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow: 
+                0 0 50px rgba(80, 176, 0, 0.8),
+                0 0 100px rgba(80, 176, 0, 0.4);
+        }
+
+        .creeper.show {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .creeper-face {
+            display: grid;
+            grid-template-columns: repeat(4, 20px);
+            grid-template-rows: repeat(4, 20px);
+            gap: 2px;
+        }
+
+        .creeper-eye {
+            background: #000;
+        }
+
+        .creeper-mouth {
+            background: #000;
+        }
+
+        .creeper-text {
+            margin-top: 10px;
+            font-size: 0.7rem;
+            color: #fff;
+            text-shadow: 2px 2px 0 #000;
+            text-align: center;
+        }
+
+        .creeper-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .creeper-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* Sorpresa Button */
+        .sorpresa-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(180deg, #D4A574 0%, #8B6914 100%);
+            border: 4px solid #5D4037;
+            border-bottom: 8px solid #3E2723;
+            border-right: 8px solid #3E2723;
+            padding: 16px 32px;
+            font-family: 'Minecraftia', 'VT323', monospace;
+            font-size: 1.1rem;
+            color: #FFD700;
+            text-shadow: 2px 2px 0 #3E2723;
+            cursor: pointer;
+            box-shadow: 
+                inset 4px 4px 0 rgba(255,255,255,0.2),
+                inset -4px -4px 0 rgba(0,0,0,0.2),
+                0 8px 0 #2a1a15,
+                0 10px 20px rgba(0,0,0,0.3);
+            transition: all 0.15s;
+            margin-top: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sorpresa-btn::before {
+            content: '🎁';
+            font-size: 1.4rem;
+            filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.3));
+        }
+
+        .sorpresa-btn:hover {
+            background: linear-gradient(180deg, #E4B584 0%, #9B7914 100%);
+            transform: translateY(-3px);
+            box-shadow: 
+                inset 4px 4px 0 rgba(255,255,255,0.3),
+                inset -4px -4px 0 rgba(0,0,0,0.2),
+                0 10px 0 #2a1a15,
+                0 15px 25px rgba(0,0,0,0.4);
+        }
+
+        .sorpresa-btn:active {
+            transform: translateY(5px);
+            box-shadow: 
+                inset 4px 4px 0 rgba(255,255,255,0.2),
+                inset -4px -4px 0 rgba(0,0,0,0.2),
+                0 3px 0 #2a1a15,
+                0 5px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Sorpresa Modal */
+        .sorpresa-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sorpresa-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .sorpresa-modal {
+            background: #8B6914;
+            border: 8px solid #5D4037;
+            border-bottom: 10px solid #3E2723;
+            border-right: 10px solid #3E2723;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 
+                inset 6px 6px 0 #D4A574,
+                inset -6px -6px 0 #3E2723,
+                0 20px 60px rgba(0,0,0,0.5);
+            transform: scale(0.5);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .sorpresa-overlay.show .sorpresa-modal {
+            transform: scale(1);
+        }
+
+        .sorpresa-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .sorpresa-content {
+            flex: 1;
+        }
+
+        .sorpresa-modal img {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            border: 4px solid #5D4037;
+            image-rendering: pixelated;
+            margin-bottom: 15px;
+        }
+
+        .sorpresa-text {
+            font-size: 1.2rem;
+            color: #FFD700;
+            text-shadow: 3px 3px 0 #3E2723;
+            line-height: 1.6;
+        }
+
+        .sorpresa-arrow {
+            background: #5D4037;
+            border: 3px solid #3E2723;
+            border-bottom: 4px solid #2a1a15;
+            border-right: 4px solid #2a1a15;
+            color: #FFD700;
+            font-family: 'Minecraftia', 'VT323', monospace;
+            font-size: 1.2rem;
+            padding: 8px 12px;
+            cursor: pointer;
+            box-shadow: inset 2px 2px 0 #8B6914;
+            transition: all 0.1s;
+            flex-shrink: 0;
+        }
+
+        .sorpresa-arrow:hover {
+            background: #6D5047;
+        }
+
+        .sorpresa-arrow:active {
+            transform: translateY(2px);
+        }
+
+        .sorpresa-close {
+            margin-top: 15px;
+            background: #3c8527;
+            border: 4px solid #1e1e1f;
+            border-bottom: 6px solid #0f0f0f;
+            border-right: 6px solid #0f0f0f;
+            padding: 10px 24px;
+            font-family: 'Minecraftia', 'VT323', monospace;
+            font-size: 0.9rem;
+            color: #fff;
+            text-shadow: 2px 2px 0 #1d4d13;
+            cursor: pointer;
+            box-shadow: 
+                inset 4px 4px 0 #4f913c,
+                inset -4px -4px 0 #1d4d13,
+                0 4px 0 #0a0a0a;
+        }
+
+        .sorpresa-close:hover {
+            background: #2a641c;
+        }
+
+        /* Bouncing Bee */
+        .bee-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 4;
+            overflow: hidden;
+        }
+
+        .bouncing-bee {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            image-rendering: pixelated;
+            animation: beeBounce 12s linear infinite;
+            filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.3));
+        }
+
+        @keyframes beeBounce {
+            0% { left: -50px; top: 20%; }
+            20% { left: 20%; top: 10%; }
+            40% { left: 50%; top: 30%; }
+            60% { left: 80%; top: 15%; }
+            80% { left: 100%; top: 25%; }
+            100% { left: 120%; top: 20%; }
+        }
+
+        /* Small hearts following bee */
+        .bee-heart {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ff4444;
+            transform: rotate(-45deg);
+            pointer-events: none;
+            z-index: 3;
+            animation: beeHeartFloat 2s ease-out forwards;
+        }
+
+        .bee-heart::before,
+        .bee-heart::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ff4444;
+            border-radius: 50%;
+        }
+
+        .bee-heart::before {
+            top: -4px;
+            left: 0;
+        }
+
+        .bee-heart::after {
+            left: 4px;
+            top: 0;
+        }
+
+        @keyframes beeHeartFloat {
+            0% { opacity: 1; transform: rotate(-45deg) scale(1); }
+            100% { opacity: 0; transform: rotate(-45deg) scale(0.3) translateY(-30px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sorpresa-btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+
+            .sorpresa-nav {
+                gap: 8px;
+            }
+
+            .sorpresa-arrow {
+                padding: 6px 8px;
+                font-size: 1rem;
+            }
+
+            .sorpresa-modal img {
+                max-width: 250px;
+            }
+
+            .sorpresa-text {
+                font-size: 1rem;
+            }
+
+            .bouncing-bee {
+                width: 30px;
+                height: 30px;
+            }
+        }
+
+        /* Sorpresa Modal */
+        .sorpresa-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.85);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .sorpresa-overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .sorpresa-modal {
+            background: #8B6914;
+            border: 8px solid #5D4037;
+            border-bottom: 10px solid #3E2723;
+            border-right: 10px solid #3E2723;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 
+                inset 6px 6px 0 #D4A574,
+                inset -6px -6px 0 #3E2723,
+                0 20px 60px rgba(0,0,0,0.5);
+            transform: scale(0.5);
+            transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .sorpresa-overlay.show .sorpresa-modal {
+            transform: scale(1);
+        }
+
+        .sorpresa-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .sorpresa-content {
+            flex: 1;
+        }
+
+        .sorpresa-modal img {
+            width: 100%;
+            max-width: 350px;
+            height: auto;
+            border: 4px solid #5D4037;
+            image-rendering: pixelated;
+            margin-bottom: 15px;
+        }
+
+        .sorpresa-text {
+            font-size: 1.2rem;
+            color: #FFD700;
+            text-shadow: 3px 3px 0 #3E2723;
+            line-height: 1.6;
+        }
+
+        .sorpresa-arrow {
+            background: #5D4037;
+            border: 3px solid #3E2723;
+            border-bottom: 4px solid #2a1a15;
+            border-right: 4px solid #2a1a15;
+            color: #FFD700;
+            font-family: 'Minecraftia', 'VT323', monospace;
+            font-size: 1.2rem;
+            padding: 8px 12px;
+            cursor: pointer;
+            box-shadow: inset 2px 2px 0 #8B6914;
+            transition: all 0.1s;
+            flex-shrink: 0;
+        }
+
+        .sorpresa-arrow:hover {
+            background: #6D5047;
+        }
+
+        .sorpresa-arrow:active {
+            transform: translateY(2px);
+        }
+
+        .sorpresa-close {
+            margin-top: 15px;
+            background: #3c8527;
+            border: 4px solid #1e1e1f;
+            border-bottom: 6px solid #0f0f0f;
+            border-right: 6px solid #0f0f0f;
+            padding: 10px 24px;
+            font-family: 'Minecraftia', 'VT323', monospace;
+            font-size: 0.9rem;
+            color: #fff;
+            text-shadow: 2px 2px 0 #1d4d13;
+            cursor: pointer;
+            box-shadow: 
+                inset 4px 4px 0 #4f913c,
+                inset -4px -4px 0 #1d4d13,
+                0 4px 0 #0a0a0a;
+        }
+
+        .sorpresa-close:hover {
+            background: #2a641c;
+        }
+
+        /* Bouncing Bee */
+        .bee-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 4;
+            overflow: hidden;
+        }
+
+        .bouncing-bee {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            image-rendering: pixelated;
+            animation: beeBounce 12s linear infinite;
+            filter: drop-shadow(2px 2px 0 rgba(0,0,0,0.3));
+        }
+
+        @keyframes beeBounce {
+            0% { left: -50px; top: 20%; }
+            20% { left: 20%; top: 10%; }
+            40% { left: 50%; top: 30%; }
+            60% { left: 80%; top: 15%; }
+            80% { left: 100%; top: 25%; }
+            100% { left: 120%; top: 20%; }
+        }
+
+        /* Small hearts following bee */
+        .bee-heart {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ff4444;
+            transform: rotate(-45deg);
+            pointer-events: none;
+            z-index: 3;
+            animation: beeHeartFloat 2s ease-out forwards;
+        }
+
+        .bee-heart::before,
+        .bee-heart::after {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #ff4444;
+            border-radius: 50%;
+        }
+
+        .bee-heart::before {
+            top: -4px;
+            left: 0;
+        }
+
+        .bee-heart::after {
+            left: 4px;
+            top: 0;
+        }
+
+        @keyframes beeHeartFloat {
+            0% { opacity: 1; transform: rotate(-45deg) scale(1); }
+            100% { opacity: 0; transform: rotate(-45deg) scale(0.3) translateY(-30px); }
         }
 
         /* Responsive */
@@ -434,25 +1597,28 @@
             }
 
             .item-frame img {
-                width: 200px;
-                height: 200px;
+                width: 220px;
+                height: 220px;
             }
 
-            .stats {
-                grid-template-columns: 1fr;
-                gap: 16px;
-                margin: 40px 0;
+            .words-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
             }
 
             .inventory-grid {
                 grid-template-columns: repeat(2, 1fr);
-                padding: 16px;
                 gap: 12px;
+                padding: 0 10px;
+            }
+            
+            .inventory-slot {
+                height: 160px;
             }
 
-            .companions-grid {
-                grid-template-columns: 1fr;
-                gap: 16px;
+            .meme-sticker {
+                width: 70px;
+                height: 70px;
             }
 
             .container {
@@ -462,18 +1628,41 @@
             .footer {
                 padding: 40px 10px 140px;
             }
+
+            .hotbar {
+                gap: 3px;
+                padding: 4px;
+            }
+
+            .hotbar-slot {
+                width: 36px;
+                height: 36px;
+            }
+
+            .hotbar-slot .slot-icon {
+                font-size: 1rem;
+            }
         }
 
         @media (max-width: 480px) {
             .item-frame img {
-                width: 160px;
-                height: 160px;
+                width: 180px;
+                height: 180px;
             }
 
             .inventory-grid {
                 grid-template-columns: 1fr 1fr;
                 gap: 8px;
-                padding: 12px;
+                padding: 0 10px;
+            }
+            
+            .inventory-slot {
+                height: 140px;
+            }
+            
+            .photo-caption {
+                font-size: 0.8rem;
+                padding: 6px 0 2px;
             }
 
             .mc-button {
@@ -482,74 +1671,330 @@
             }
         }
 
-        /* Music Toggle Button */
-        .music-btn {
+        /* XP Bar */
+        .xp-bar-container {
             position: fixed;
-            bottom: 140px;
-            right: 20px;
-            width: 56px;
-            height: 56px;
-            background: #3c8527;
-            border: 4px solid #1e1e1f;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 
-                inset 4px 4px 0 #4f913c,
-                inset -4px -4px 0 #1d4d13,
-                0 6px 0 #1e1e1f;
-            z-index: 1000;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 8px;
+            background: #1a1a1a;
+            border-top: 2px solid #333;
+            z-index: 100;
+        }
+
+        .xp-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #7FFF00, #55aa00);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px #7FFF00;
+        }
+
+        .xp-bar-text {
+            position: fixed;
+            bottom: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6rem;
+            color: #7FFF00;
+            text-shadow: 1px 1px 0 #000;
+            z-index: 101;
+            opacity: 0.8;
+        }
+
+        /* Welcome Message */
+        .welcome-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.1s;
+            flex-direction: column;
+            transition: opacity 1s ease;
         }
 
-        .music-btn:hover {
-            background: #2a641c;
+        .welcome-overlay.hide {
+            opacity: 0;
+            pointer-events: none;
         }
 
-        .music-btn:active {
-            transform: translateY(6px);
+        .welcome-text {
+            font-size: clamp(1.2rem, 4vw, 2rem);
+            color: #FFD700;
+            text-shadow: 3px 3px 0 #3d3d3d;
+            text-align: center;
+            max-width: 80%;
+            line-height: 1.6;
+        }
+
+        .welcome-cursor {
+            display: inline-block;
+            width: 3px;
+            height: 1em;
+            background: #FFD700;
+            margin-left: 4px;
+            animation: cursorBlink 0.8s step-end infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes cursorBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .welcome-skip {
+            margin-top: 30px;
+            background: transparent;
+            border: 2px solid #666;
+            padding: 8px 16px;
+            font-family: 'Minecraftia', 'VT323', monospace;
+            font-size: 0.7rem;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .welcome-skip:hover {
+            border-color: #FFD700;
+            color: #FFD700;
+        }
+
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #1a1a2e;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        .preloader.hide {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .preloader-text {
+            font-size: 1.2rem;
+            color: #FFD700;
+            text-shadow: 2px 2px 0 #3d3d3d;
+            margin-bottom: 20px;
+            animation: preloaderPulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes preloaderPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .preloader-bar-container {
+            width: 300px;
+            height: 20px;
+            background: #333;
+            border: 4px solid #555;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preloader-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #7FFF00, #55aa00);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px #7FFF00;
+        }
+
+        .preloader-percent {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #7FFF00;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        /* Fireworks */
+        .firework {
+            position: fixed;
+            pointer-events: none;
+            z-index: 1001;
+        }
+
+        .firework-particle {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: fireworkExplode 1s ease-out forwards;
+            z-index: 1002;
+        }
+
+        @keyframes fireworkExplode {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--tx), var(--ty)) scale(0);
+                opacity: 0;
+            }
+        }
+
+        /* Achievement Toast */
+        .achievement-toast {
+            position: fixed;
+            top: 20px;
+            right: -400px;
+            z-index: 5000;
+            background: #2a2a2a;
+            border: 4px solid #555;
+            border-bottom: 6px solid #333;
+            border-right: 6px solid #333;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             box-shadow: 
-                inset 4px 4px 0 #4f913c,
-                inset -4px -4px 0 #1d4d13,
-                0 0 0 #1e1e1f;
+                inset 2px 2px 0 #444,
+                0 4px 0 #111,
+                0 8px 20px rgba(0,0,0,0.5);
+            transition: right 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            max-width: 350px;
         }
 
-        .music-btn.muted {
-            background: #8B6914;
-            opacity: 0.7;
+        .achievement-toast.show {
+            right: 20px;
         }
 
-        @media (max-width: 768px) {
-            .music-btn {
-                bottom: 120px;
-                right: 10px;
-                width: 48px;
-                height: 48px;
-                font-size: 1.2rem;
+        .achievement-icon {
+            width: 40px;
+            height: 40px;
+            background: #FFD700;
+            border: 3px solid #B8860B;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .achievement-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .achievement-title {
+            font-size: 0.7rem;
+            color: #FFD700;
+            text-shadow: 1px 1px 0 #000;
+            margin-bottom: 2px;
+        }
+
+        .achievement-name {
+            font-size: 0.9rem;
+            color: #fff;
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        /* Click Particles */
+        .click-particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            animation: clickParticleFloat 1s ease-out forwards;
+            font-size: 1.2rem;
+        }
+
+        @keyframes clickParticleFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--px), var(--py)) scale(0.5);
+                opacity: 0;
             }
         }
     </style>
 </head>
 <body>
+    <!-- Preloader -->
+    <div class="preloader" id="preloader">
+        <div class="preloader-text">Cargando server de Yanella...</div>
+        <div class="preloader-bar-container">
+            <div class="preloader-bar-fill" id="preloaderBar"></div>
+        </div>
+        <div class="preloader-percent" id="preloaderPercent">0%</div>
+    </div>
+
+    <!-- Achievement Toast -->
+    <div class="achievement-toast" id="achievementToast">
+        <div class="achievement-icon">🏆</div>
+        <div class="achievement-text">
+            <span class="achievement-title">Logro desbloqueado</span>
+            <span class="achievement-name">Corazón robado</span>
+        </div>
+    </div>
+
+    <!-- Welcome Overlay -->
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="welcome-text" id="welcomeText"></div>
+        <button class="welcome-skip" onclick="skipWelcome()">Saltar intro</button>
+    </div>
+
+    <!-- Sky Pattern -->
+    <div class="sky-pattern"></div>
+
+    <!-- Minecraft Sun -->
+    <div class="mc-sun"></div>
+
+    <!-- Mountains -->
+    <div class="mountain mountain1"></div>
+    <div class="mountain mountain2"></div>
+
+    <!-- Trees -->
+    <div class="mc-tree tree1"></div>
+    <div class="mc-tree tree2"></div>
+
     <!-- Clouds -->
     <div class="cloud cloud1"></div>
     <div class="cloud cloud2"></div>
     <div class="cloud cloud3"></div>
 
-    <!-- Floating Hearts -->
-    <div class="heart heart1"></div>
-    <div class="heart heart2"></div>
-    <div class="heart heart3"></div>
-    <div class="heart heart4"></div>
-    <div class="heart heart5"></div>
+    <!-- Particles -->
+    <div class="particles">
+        <div class="particle heart" style="left: 10%; animation-delay: 0s;"></div>
+        <div class="particle heart" style="left: 30%; animation-delay: 2s;"></div>
+        <div class="particle heart" style="left: 50%; animation-delay: 4s;"></div>
+        <div class="particle heart" style="left: 70%; animation-delay: 1s;"></div>
+        <div class="particle heart" style="left: 90%; animation-delay: 3s;"></div>
+        <div class="particle xp" style="left: 20%; animation-delay: 1.5s;"></div>
+        <div class="particle xp" style="left: 60%; animation-delay: 3.5s;"></div>
+        <div class="particle xp" style="left: 80%; animation-delay: 0.5s;"></div>
+    </div>
+
+    <!-- Meme Stickers -->
+    <img src="meme1.jpg" alt="" class="meme-sticker meme1">
+    <img src="meme2.jpg" alt="" class="meme-sticker meme2">
+    <img src="meme3.jpg" alt="" class="meme-sticker meme3">
+    <img src="meme4.jpg" alt="" class="meme-sticker meme4">
 
     <div class="container">
         <!-- Hero -->
         <section class="hero">
-            <h1>YANELLA</h1>
-            <p class="hero-subtitle">La Reina Oficial del Server</p>
+            <h1>YANELLA<span class="enchanted">YANELLA</span></h1>
+            <p class="hero-subtitle">La más linda del server</p>
             
             <div class="item-frame">
                 <div class="item-frame-nail"></div>
@@ -557,144 +2002,469 @@
             </div>
         </section>
 
-        <!-- Stats -->
-        <section class="stats">
-            <div class="mc-block">
-                <span class="mc-block-icon">❤️</span>
-                <div class="mc-block-title">CORAZONES ROBADOS</div>
-                <div class="mc-block-value">999+ y contando</div>
-            </div>
-            <div class="mc-block">
-                <span class="mc-block-icon">🛡️</span>
-                <div class="mc-block-title">PROTECCIÓN GOLEM</div>
-                <div class="mc-block-value">Activa 24/7</div>
-            </div>
-            <div class="mc-block">
-                <span class="mc-block-icon">⭐</span>
-                <div class="mc-block-title">RANGO EN EL SERVER</div>
-                <div class="mc-block-value">Reina absoluta</div>
+        <!-- Words -->
+        <section class="words-section">
+            <h2 class="words-title">Palabras que le quedan</h2>
+            <div class="words-grid">
+                <div class="word-block">
+                    <div class="word-text">LINDA</div>
+                </div>
+                <div class="word-block">
+                    <div class="word-text">BONITA</div>
+                </div>
+                <div class="word-block">
+                    <div class="word-text">HERMOSA</div>
+                </div>
+                <div class="word-block">
+                    <div class="word-text">GUAPA</div>
+                </div>
+                <div class="word-block">
+                    <div class="word-text">SEXY</div>
+                </div>
+                <div class="word-block">
+                    <div class="word-text">REINA</div>
+                </div>
             </div>
         </section>
 
         <!-- Gallery -->
         <section class="gallery">
-            <h2 class="section-title">Inventario de la Reina</h2>
+            <h2 class="section-title">Fotos de la Reina</h2>
             <div class="inventory-grid">
-                <div class="inventory-slot">
-                    <img src="ella.jpg" alt="Yanella 1">
+                <div class="photo-item">
+                    <div class="inventory-slot">
+                        <img src="ella2.jpg" alt="Yanella 2">
+                    </div>
+                    <span class="photo-caption">MAMASITA</span>
                 </div>
-                <div class="inventory-slot">
-                    <img src="ella2.jpg" alt="Yanella 2">
+                <div class="photo-item">
+                    <div class="inventory-slot">
+                        <img src="ella3.jpg" alt="Yanella 3">
+                    </div>
+                    <span class="photo-caption">GRRRR</span>
                 </div>
-                <div class="inventory-slot">
-                    <img src="ella3.jpg" alt="Yanella 3">
+                <div class="photo-item">
+                    <div class="inventory-slot">
+                        <img src="ella4.jpg" alt="Yanella 4">
+                    </div>
+                    <span class="photo-caption">COSITA RICA</span>
                 </div>
-                <div class="inventory-slot">
-                    <img src="ella4.jpg" alt="Yanella 4">
+                <div class="photo-item">
+                    <div class="inventory-slot">
+                        <img src="ella5.jpg" alt="Yanella 5">
+                    </div>
+                    <span class="photo-caption">HOT FIU FIU</span>
                 </div>
             </div>
         </section>
 
-        <!-- Companions -->
-        <section class="companions">
-            <h2 class="section-title">Testigos del Server</h2>
-            <div class="companions-grid">
-                <div class="mob-card">
-                    <img src="minecraft2.jpg" alt="Abeja Minecraft">
-                    <p class="mob-text">La abeja oficial ya la vio y se enamoró. No se discute.</p>
-                </div>
-                <div class="mob-card">
-                    <img src="minecraft3.jpg" alt="Gallina Minecraft">
-                    <p class="mob-text">La gallina del server confirma: es real. 100% verificado.</p>
-                </div>
-                <div class="mob-card">
-                    <img src="minecraft4.jpg" alt="Golem Minecraft">
-                    <p class="mob-text">El golem está asignado a proteger la reina. No se metan.</p>
-                </div>
+        <!-- Quote -->
+        <section class="quote-section">
+            <div class="quote-sign">
+                <div class="quote-nail"></div>
+                <p class="quote-text">"A estos hombres de hoy en día hay que decirles qué hacer"</p>
+                <p class="quote-sub">— Admin Yanella</p>
             </div>
         </section>
+
+        <!-- Hotbar -->
+        <div class="hotbar">
+            <div class="hotbar-slot active" onclick="selectSlot(this)">
+                <span class="slot-num">1</span>
+                <span class="slot-icon">❤️</span>
+            </div>
+            <div class="hotbar-slot" onclick="selectSlot(this)">
+                <span class="slot-num">2</span>
+                <span class="slot-icon">📷</span>
+            </div>
+            <div class="hotbar-slot" onclick="selectSlot(this)">
+                <span class="slot-num">3</span>
+                <span class="slot-icon">💎</span>
+            </div>
+            <div class="hotbar-slot" onclick="selectSlot(this)">
+                <span class="slot-num">4</span>
+                <span class="slot-icon">⭐</span>
+            </div>
+            <div class="hotbar-slot" onclick="selectSlot(this)">
+                <span class="slot-num">5</span>
+                <span class="slot-icon">👑</span>
+            </div>
+            <div class="hotbar-slot" onclick="selectSlot(this)">
+                <span class="slot-num">6</span>
+                <span class="slot-icon">🔥</span>
+            </div>
+            <div class="hotbar-slot" onclick="selectSlot(this)">
+                <span class="slot-num">7</span>
+                <span class="slot-icon">🌹</span>
+            </div>
+            <div class="hotbar-slot" onclick="selectSlot(this)">
+                <span class="slot-num">8</span>
+                <span class="slot-icon">🎵</span>
+            </div>
+            <div class="hotbar-slot" onclick="selectSlot(this)">
+                <span class="slot-num">9</span>
+                <span class="slot-icon">✨</span>
+            </div>
+        </div>
 
         <!-- Footer -->
         <footer class="footer">
             <p class="footer-text">
-                Fin del comunicado.<br>
-                Yanella sigue siendo la jefa del mundo.
+                Yanella, la más linda.<br>
+                Fin del comunicado.
             </p>
-            <button class="mc-button" onclick="spawnParticles()">Aceptar verdad absoluta</button>
+            <button class="sorpresa-btn" onclick="showSorpresa()">
+                🎁 Sorpresa
+            </button>
         </footer>
     </div>
 
-    <div class="ground"></div>
-
-    <!-- Background Music -->
+    <!-- Audio -->
     <audio id="bgMusic" loop>
         <source src="cancion-minecraft.mp3" type="audio/mpeg">
     </audio>
 
-    <!-- Music Toggle Button -->
-    <button id="musicToggle" class="music-btn" onclick="toggleMusic()" title="Activar/Desactivar música">
-        🎵
+    <!-- Day/Night Toggle -->
+    <button class="daynight-toggle" id="daynightBtn" onclick="toggleDayNight()">
+        ☀ Día
     </button>
 
-    <script>
-        const bgMusic = document.getElementById('bgMusic');
-        const musicToggle = document.getElementById('musicToggle');
-        let isPlaying = false;
+    <!-- Music Toggle -->
+    <button class="music-toggle" id="musicBtn" onclick="toggleMusic()">
+        ♪ Música: OFF
+    </button>
 
-        // Intentar reproducir al cargar
-        window.addEventListener('load', () => {
-            bgMusic.volume = 0.5;
-            const playPromise = bgMusic.play();
-            if (playPromise !== undefined) {
-                playPromise.then(() => {
-                    isPlaying = true;
-                }).catch(() => {
-                    // Autoplay bloqueado, esperar interacción
-                    isPlaying = false;
-                    musicToggle.classList.add('muted');
-                });
+    <!-- Mobs -->
+    <div class="mob mob-chicken"></div>
+    <div class="mob mob-cow"></div>
+    <div class="mob mob-pig"></div>
+
+    <!-- Creeper Easter Egg -->
+    <div class="creeper-trigger" onclick="showCreeper()"></div>
+    <div class="creeper-overlay" id="creeperOverlay" onclick="hideCreeper()"></div>
+    <div class="creeper" id="creeper">
+        <div class="creeper-face">
+            <div></div><div class="creeper-eye"></div><div class="creeper-eye"></div><div></div>
+            <div></div><div></div><div></div><div></div>
+            <div class="creeper-mouth"></div><div class="creeper-mouth"></div><div class="creeper-mouth"></div><div class="creeper-mouth"></div>
+            <div></div><div class="creeper-mouth"></div><div class="creeper-mouth"></div><div></div>
+        </div>
+        <div class="creeper-text">SSSSSS...<br>Boom! 💥<br>Yanella es la mejor</div>
+    </div>
+
+    <!-- Sorpresa Modal -->
+    <div class="sorpresa-overlay" id="sorpresaOverlay" onclick="hideSorpresa()">
+        <div class="sorpresa-modal" onclick="event.stopPropagation()">
+            <div class="sorpresa-nav">
+                <button class="sorpresa-arrow" onclick="prevSorpresa()">◀</button>
+                <div class="sorpresa-content">
+                    <img id="sorpresaImg" src="minecraft4.jpg" alt="Sorpresa">
+                    <p id="sorpresaText" class="sorpresa-text">Una flor para otra flor 🌷</p>
+                </div>
+                <button class="sorpresa-arrow" onclick="nextSorpresa()">▶</button>
+            </div>
+            <button class="sorpresa-close" onclick="hideSorpresa()">Cerrar</button>
+        </div>
+    </div>
+
+    <!-- Bouncing Bee -->
+    <div class="bee-container">
+        <img src="minecraft2.jpg" alt="Abeja" class="bouncing-bee">
+    </div>
+
+    <!-- XP Bar -->
+    <div class="xp-bar-container">
+        <div class="xp-bar-fill" id="xpBarFill"></div>
+    </div>
+    <div class="xp-bar-text" id="xpBarText">Nivel 1</div>
+
+    <div class="ground">
+        <div class="ground-ore ore1"></div>
+        <div class="ground-ore ore2"></div>
+        <div class="ground-ore ore3"></div>
+        <div class="ground-ore ore4"></div>
+        <div class="ground-ore ore5"></div>
+        <div class="bedrock"></div>
+    </div>
+
+    <script>
+        // Preloader
+        let preloaderProgress = 0;
+        const preloaderBar = document.getElementById('preloaderBar');
+        const preloaderPercent = document.getElementById('preloaderPercent');
+        const preloader = document.getElementById('preloader');
+
+        function updatePreloader() {
+            preloaderProgress += Math.random() * 15 + 5;
+            if (preloaderProgress > 100) preloaderProgress = 100;
+            
+            preloaderBar.style.width = preloaderProgress + '%';
+            preloaderPercent.textContent = Math.floor(preloaderProgress) + '%';
+            
+            if (preloaderProgress < 100) {
+                setTimeout(updatePreloader, 200);
+            } else {
+                setTimeout(() => {
+                    preloader.classList.add('hide');
+                }, 500);
             }
+        }
+
+        window.addEventListener('load', () => {
+            updatePreloader();
         });
 
-        // También intentar en primera interacción del usuario
-        document.addEventListener('click', function initAudio() {
-            if (!isPlaying) {
-                bgMusic.play().then(() => {
-                    isPlaying = true;
-                    musicToggle.classList.remove('muted');
-                }).catch(() => {});
-            }
-            document.removeEventListener('click', initAudio);
-        }, { once: true });
+        const music = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        let isPlaying = false;
 
         function toggleMusic() {
             if (isPlaying) {
-                bgMusic.pause();
-                musicToggle.classList.add('muted');
-                musicToggle.textContent = '🔇';
+                music.pause();
+                musicBtn.textContent = '♪ Música: OFF';
+                musicBtn.style.background = '#3c8527';
             } else {
-                bgMusic.play();
-                musicToggle.classList.remove('muted');
-                musicToggle.textContent = '🎵';
+                music.play().catch(e => console.log('Audio play failed:', e));
+                musicBtn.textContent = '♪ Música: ON';
+                musicBtn.style.background = '#2a641c';
             }
             isPlaying = !isPlaying;
         }
 
-        function spawnParticles() {
-            for (let i = 0; i < 20; i++) {
+        // Hotbar selection
+        function selectSlot(slot) {
+            document.querySelectorAll('.hotbar-slot').forEach(s => s.classList.remove('active'));
+            slot.classList.add('active');
+        }
+
+        // Day/Night toggle
+        let isNight = false;
+        function toggleDayNight() {
+            isNight = !isNight;
+            document.body.classList.toggle('night', isNight);
+            const btn = document.getElementById('daynightBtn');
+            btn.textContent = isNight ? '🌙 Noche' : '☀ Día';
+            btn.style.background = isNight ? '#2c3e50' : '#3c8527';
+        }
+
+        // Heart particles on photo hover
+        document.querySelectorAll('.photo-item').forEach(item => {
+            item.addEventListener('mouseenter', function(e) {
+                const rect = this.getBoundingClientRect();
+                for (let i = 0; i < 5; i++) {
+                    setTimeout(() => {
+                        const heart = document.createElement('div');
+                        heart.className = 'heart-particle';
+                        heart.style.left = (rect.left + rect.width / 2 + (Math.random() - 0.5) * 60) + 'px';
+                        heart.style.top = (rect.top + rect.height / 2) + 'px';
+                        document.body.appendChild(heart);
+                        setTimeout(() => heart.remove(), 1500);
+                    }, i * 100);
+                }
+            });
+        });
+
+        // Creeper easter egg
+        function showCreeper() {
+            document.getElementById('creeper').classList.add('show');
+            document.getElementById('creeperOverlay').classList.add('show');
+        }
+
+        function hideCreeper() {
+            document.getElementById('creeper').classList.remove('show');
+            document.getElementById('creeperOverlay').classList.remove('show');
+        }
+
+        // Sorpresa modal carousel
+        const sorpresaSlides = [
+            { img: 'minecraft4.jpg', text: 'Una flor para otra flor 🌷' },
+            { img: 'minecraft3.jpg', text: 'yo cuando te veo' },
+            { img: 'minecraft.jpg', text: 'Corazones por ti ❤️' },
+            { img: 'minecraft2.jpg', text: 'La abeja más dulce 🍯' }
+        ];
+        let currentSorpresa = 0;
+
+        function showSorpresa() {
+            currentSorpresa = 0;
+            updateSorpresa();
+            document.getElementById('sorpresaOverlay').classList.add('show');
+            launchFireworks();
+        }
+
+        function hideSorpresa() {
+            document.getElementById('sorpresaOverlay').classList.remove('show');
+        }
+
+        function updateSorpresa() {
+            document.getElementById('sorpresaImg').src = sorpresaSlides[currentSorpresa].img;
+            document.getElementById('sorpresaText').textContent = sorpresaSlides[currentSorpresa].text;
+        }
+
+        function nextSorpresa() {
+            currentSorpresa = (currentSorpresa + 1) % sorpresaSlides.length;
+            updateSorpresa();
+        }
+
+        function prevSorpresa() {
+            currentSorpresa = (currentSorpresa - 1 + sorpresaSlides.length) % sorpresaSlides.length;
+            updateSorpresa();
+        }
+
+        // Bee hearts trail
+        function spawnBeeHeart() {
+            const bee = document.querySelector('.bouncing-bee');
+            if (!bee) return;
+            const rect = bee.getBoundingClientRect();
+            const heart = document.createElement('div');
+            heart.className = 'bee-heart';
+            heart.style.left = (rect.left + rect.width / 2) + 'px';
+            heart.style.top = (rect.top + rect.height / 2) + 'px';
+            document.querySelector('.bee-container').appendChild(heart);
+            setTimeout(() => heart.remove(), 2000);
+        }
+
+        setInterval(spawnBeeHeart, 300);
+
+        // XP Bar scroll tracking
+        function updateXPBar() {
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollPercent = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            document.getElementById('xpBarFill').style.width = scrollPercent + '%';
+            
+            const level = Math.floor(scrollPercent / 10) + 1;
+            document.getElementById('xpBarText').textContent = 'Nivel ' + level;
+        }
+
+        window.addEventListener('scroll', updateXPBar);
+        updateXPBar();
+
+        // Welcome typing animation
+        const welcomeMessages = [
+            'Bienvenido al server de Yanella...',
+            'Cargando belleza...',
+            'Iniciando admiración...',
+            '¡Listo! ❤️'
+        ];
+        let currentMessage = 0;
+        let currentChar = 0;
+        let welcomeInterval;
+        const welcomeTextEl = document.getElementById('welcomeText');
+
+        function typeWelcome() {
+            if (currentMessage >= welcomeMessages.length) {
                 setTimeout(() => {
-                    const particle = document.createElement('div');
-                    particle.className = 'particle';
-                    particle.style.left = Math.random() * window.innerWidth + 'px';
-                    particle.style.top = '-10px';
-                    const colors = ['#FFD700', '#FF6B6B', '#4ECDC4', '#95E1D3', '#5E9D34'];
-                    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-                    document.body.appendChild(particle);
-                    
-                    setTimeout(() => particle.remove(), 3000);
-                }, i * 100);
+                    document.getElementById('welcomeOverlay').classList.add('hide');
+                }, 1500);
+                return;
+            }
+
+            const message = welcomeMessages[currentMessage];
+            if (currentChar < message.length) {
+                welcomeTextEl.innerHTML = message.substring(0, currentChar + 1) + '<span class="welcome-cursor"></span>';
+                currentChar++;
+                welcomeInterval = setTimeout(typeWelcome, 80);
+            } else {
+                currentChar = 0;
+                currentMessage++;
+                welcomeInterval = setTimeout(typeWelcome, 1000);
             }
         }
+
+        function skipWelcome() {
+            clearTimeout(welcomeInterval);
+            document.getElementById('welcomeOverlay').classList.add('hide');
+        }
+
+        // Start welcome animation
+        setTimeout(typeWelcome, 500);
+
+        // Fireworks effect
+        function createFirework(x, y) {
+            const colors = ['#ff0000', '#ff7f00', '#ffff00', '#00ff00', '#0000ff', '#4b0082', '#9400d3', '#ff69b4', '#00ffff'];
+            const particleCount = 30;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'firework-particle';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                const angle = (Math.PI * 2 * i) / particleCount;
+                const distance = 50 + Math.random() * 100;
+                const tx = Math.cos(angle) * distance;
+                const ty = Math.sin(angle) * distance;
+                
+                particle.style.setProperty('--tx', tx + 'px');
+                particle.style.setProperty('--ty', ty + 'px');
+                
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        function launchFireworks() {
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    const x = centerX + (Math.random() - 0.5) * 300;
+                    const y = centerY + (Math.random() - 0.5) * 200;
+                    createFirework(x, y);
+                }, i * 200);
+            }
+        }
+
+        // Achievement Toast
+        function showAchievement() {
+            const toast = document.getElementById('achievementToast');
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // Click particles
+        const clickEmojis = ['❤️', '💛', '💚', '💙', '💜', '✨', '🌟', '💎', '🔥', '🌹'];
+        
+        document.addEventListener('click', function(e) {
+            // Don't spawn particles on buttons or interactive elements
+            if (e.target.tagName === 'BUTTON' || 
+                e.target.closest('button') ||
+                e.target.closest('.hotbar-slot') ||
+                e.target.closest('.sorpresa-modal') ||
+                e.target.closest('.creeper') ||
+                e.target.closest('.welcome-overlay')) {
+                return;
+            }
+            
+            const emoji = clickEmojis[Math.floor(Math.random() * clickEmojis.length)];
+            const particle = document.createElement('div');
+            particle.className = 'click-particle';
+            particle.textContent = emoji;
+            particle.style.left = e.clientX + 'px';
+            particle.style.top = e.clientY + 'px';
+            
+            const angle = Math.random() * Math.PI * 2;
+            const distance = 30 + Math.random() * 50;
+            const px = Math.cos(angle) * distance;
+            const py = Math.sin(angle) * distance - 40;
+            
+            particle.style.setProperty('--px', px + 'px');
+            particle.style.setProperty('--py', py + 'px');
+            
+            document.body.appendChild(particle);
+            setTimeout(() => particle.remove(), 1000);
+        });
+
+        // Show achievement when surprise opens
+        const originalShowSorpresa = showSorpresa;
+        showSorpresa = function() {
+            originalShowSorpresa();
+            setTimeout(showAchievement, 800);
+        };
     </script>
 </body>
 </html>
